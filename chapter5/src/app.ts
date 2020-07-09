@@ -1,71 +1,82 @@
-abstract class Department {
-  private employees: string[] = [];
+type Admin = {
+  name: string;
+  privileges: string[];
+};
 
-  constructor(private readonly id: string, public name: string) {}
+type Employee = {
+  name: string;
+  startDate: Date;
+};
 
-  static createEmployee(name: string) {
-    return { name };
+type Combinable = string | number;
+
+type ElevatedEmployee = Admin & Employee;
+
+const e1: ElevatedEmployee = {
+  name: 'Marco',
+  privileges: ['Create Server'],
+  startDate: new Date(),
+};
+
+console.log(e1);
+
+function add(a: Combinable, b: Combinable): Combinable {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
   }
-
-  abstract describe(this: Department): void;
-
-  getId() {
-    return this.id;
-  }
-
-  addEmployee(employee: string) {
-    this.employees.push(employee);
-  }
-  printEmployeesInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
-  }
+  return a + b;
 }
 
-class ITDepartment extends Department {
-  private cio: string = '';
-  get groupCio(): string {
-    return this.cio;
-  }
-  set groupCio(name: string) {
-    this.cio = name;
-  }
-  admins: string[];
+// const result: Combinable = add(4, '5');
+// console.log(result);
 
-  constructor(id: string, admins: string[] = []) {
-    super(id, 'IT');
-    this.admins = admins;
-  }
-  describe(): void {
-    console.log(
-      `Dept id: ${this.getId()} - name: ${this.name}, admins: ${this.admins}`
-    );
-    console.log(`Group cio: ${this.groupCio}`);
-  }
-}
+// type UnknownEmployee = Employee | Admin;
 
-class AccountingDepartment extends Department {
-  private static accountingDepartment: AccountingDepartment;
-  private constructor(id: string) {
-    super(id, 'Accounting');
-  }
-  static getInstance(id: string): AccountingDepartment {
-    if (!this.accountingDepartment) {
-      this.accountingDepartment = new AccountingDepartment(id);
-    }
-    return this.accountingDepartment;
-  }
-  describe(): void {
-    console.log('Singleton');
-  }
-}
+// function printEmployeeInformation(emp: UnknownEmployee) {
+//   console.log(`Name: ${emp.name}`);
+//   if ('privileges' in emp) {
+//     console.log(`Privileges: ${emp.privileges}`);
+//   }
+// }
 
-const department = new ITDepartment('1134342432', ['Max']);
-department.groupCio = 'Max';
+// printEmployeeInformation(e1);
 
-const employee1 = Department.createEmployee('Max');
-console.log(employee1);
+// interface Bird {
+//   type: 'bird';
+//   flyingSpeed: number;
+// }
 
-console.log(department.describe());
-const accDepartment = AccountingDepartment.getInstance('123');
-console.log(accDepartment.describe());
+// interface Horse {
+//   type: 'horse';
+//   runningSpeed: number;
+// }
+
+// type Animal = Bird | Horse;
+
+// function moveAnimal(animal: Animal) {
+//   let speed;
+//   switch (animal.type) {
+//     case 'bird':
+//       speed = animal.flyingSpeed;
+//       break;
+//     case 'horse':
+//       speed = animal.runningSpeed;
+//   }
+//   console.log(`Moving with speed ${speed}`);
+// }
+
+// moveAnimal({ type: 'horse', runningSpeed: 500 });
+// moveAnimal({ type: 'bird', flyingSpeed: 1000 });
+
+// const userInputElement = document.getElementById(
+//   'user-input'
+// )! as HTMLInputElement;
+// userInputElement.value = 'Hi there!';
+
+// interface ErrorContainer {
+//   [prop: string]: string;
+// }
+
+// const errorBag: ErrorContainer = {
+//   email: 'Not a valid email',
+// };
